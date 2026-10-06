@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Fixora user account details and profile information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "provider", "admin"] },
+        "avatar": { "type": "string" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "email", "role"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Service appointment booking record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "providerId": { "type": "string" },
+        "providerName": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "serviceTitle": { "type": "string" },
+        "problemDescription": { "type": "string" },
+        "scheduledAt": { "type": "string" },
+        "urgency": { "type": "string", "enum": ["standard", "emergency"] },
+        "status": { "type": "string", "enum": ["pending", "accepted", "en_route", "arrived", "in_progress", "completed", "cancelled"] },
+        "totalAmountPkr": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["pending", "paid", "refunded"] },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "customerId", "providerId", "categoryId", "serviceTitle", "scheduledAt", "status", "totalAmountPkr"]
+    },
+    "WalletAccount": {
+      "title": "WalletAccount",
+      "description": "User wallet account with PKR and USD balances",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "balancePkr": { "type": "number" },
+        "balanceUsd": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "balancePkr"]
+    },
+    "ServiceProvider": {
+      "title": "ServiceProvider",
+      "description": "Verified service technician profile in the Fixora directory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "city": { "type": "string" },
+        "hourlyRate": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "isOnline": { "type": "boolean" },
+        "emergencyReady": { "type": "boolean" },
+        "verified": { "type": "boolean" }
+      },
+      "required": ["id", "name", "category", "city", "hourlyRate"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer feedback and rating on a completed job",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "providerId": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "bookingId", "customerId", "providerId", "rating"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile collection stored by user ID"
+    },
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/Booking" },
+      "description": "Bookings collection accessible to customer, provider, and admin"
+    },
+    "/wallets/{userId}": {
+      "schema": { "$ref": "#/entities/WalletAccount" },
+      "description": "User wallet account document"
+    },
+    "/providers/{providerId}": {
+      "schema": { "$ref": "#/entities/ServiceProvider" },
+      "description": "Public verified technicians catalog"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Customer reviews for providers"
+    }
+  }
+}
